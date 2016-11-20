@@ -1,11 +1,12 @@
 <HTML>
     <HEAD>
         <TITLE> ～來做網頁吧～ </TITLE>
+        <script language="JavaScript" src="javascript/submitCheck.js"></script>
     </HEAD>
     <BODY>
-        <form action="upload" method="POST" enctype="multipart/form-data">
-            股票代碼x: <input type="text" name="key" />
-            <input type="submit" value="Submit" />
+        <form name="reg" action="upload" method="POST" enctype="multipart/form-data">
+            股票代碼x: <input type="text" name="key" required="required" />
+            <input type="button" value="Submit" onClick="check()" />
         </form>
         <button onclick="self.location.href='imageIndex'"><img src= "images/kentai.gif"></button>
         
