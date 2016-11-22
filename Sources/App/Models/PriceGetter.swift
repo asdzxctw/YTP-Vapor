@@ -1,6 +1,7 @@
 import Vapor
 import Ji
 import Foundation
+import Dispatch
 
 class StockPriceGetter{
     var stockNum:Int
