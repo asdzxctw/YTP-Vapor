@@ -35,8 +35,42 @@ drop.post("upload") { request in
         
     }
     return "Error retrieving parameters."
-    
 }
+
+drop.post("hisPrice") { request in
+    if let numStr = request.data["key"]?.string {
+        if let num = Int(numStr) {
+            if num>1000&&num<10000{
+                let pGetter = StockPriceGetter(number:Int(numStr)!)
+                if let sDate = request.data["startDate"]?.string{
+                   if let eDate = request.data["endDate"]?.string{
+                    
+                    return try JSON(node: pGetter.getHistoryPrice(startDate: sDate, endDate: eDate))
+                    }
+                }
+            }
+        }
+        
+    }
+    return "Error retrieving parameters."
+}
+    
+//測試用post("hisPrice")
+//drop.post("hisPrice") { request in
+//    if let numStr = request.data["key"]?.string {
+//        if let sDate = request.data["startDate"]?.string{
+//            if let eDate = request.data["endDate"]?.string{
+//                    
+//                return try JSON(node: [
+//                        "代碼":numStr,
+//                        "開始":sDate,
+//                        "結束":eDate
+//                    ])
+//            }
+//        }
+//    }
+//    return "Error retrieving parameters."
+//}
 
 drop.get("/stockNum",":key") { request in
     if let numStr = request.parameters["key"]?.string {
