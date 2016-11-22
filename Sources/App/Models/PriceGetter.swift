@@ -33,11 +33,17 @@ class StockPriceGetter{
             let endPriceNodes = jiDoc.xPath("//div[@id='main3']/div[@class='mbx bd3']/div[@class='tab']/table/tr/td[5]")
             let timeNodes = jiDoc.xPath("//div[@id='main3']/div[@class='mbx bd3']/div[@class='tab']/table/tr/td[1]")
             
-            for index in 0...endPriceNodes!.count-1{
-                reDic["\(timeNodes![index].content!)"] = "\(endPriceNodes![index].content!)"
+            if endPriceNodes!.count > 0{
+                for index in 0...endPriceNodes!.count-1{
+                    reDic["\(timeNodes![index].content!)"] = "\(endPriceNodes![index].content!)"
+                }
+                //reDic = ["Yo":"Hoho"]
+                sema.signal()
+            }else{
+                reDic = ["訊息":"出錯了呢"]
+                sema.signal()
             }
-            //reDic = ["Yo":"Hoho"]
-            sema.signal()
+            
             
         }
         dataTask.resume()
