@@ -16,7 +16,7 @@ class StockPriceGetter{
     
     func getHistoryPrice(startDate:String,endDate:String) -> [String:String] {
         var reDic:[String:String] = [:]
-        let sema = DispatchSemaphore( value: 0 )
+        let sema = DispatchSemaphore.init(value: 0)
         print(startDate)
         print(endDate)
         
