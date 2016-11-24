@@ -5,17 +5,16 @@ import Dispatch
 
 class StockPriceGetter{
     var stockNum:Int
-    var stockUrl:URL
-    var hisStockURL:URL
     
     init(number:Int) {
         self.stockNum = number
-        stockUrl = URL(string: "https://tw.stock.yahoo.com/q/q?s=\(number)")!
-        hisStockURL = URL(string: "http://www.cnyes.com/twstock/ps_historyprice/\(number).htm")!
+        
+        
     }
     
     
     func getHistoryPrice(startDate:String,endDate:String) -> [String:String] {
+        let hisStockURL = URL(string: "http://www.cnyes.com/twstock/ps_historyprice/\(stockNum).htm")!
         var reDic:[String:String] = [:]
         let sema = DispatchSemaphore.init(value: 0)
         print(startDate)
@@ -28,6 +27,9 @@ class StockPriceGetter{
         
         
         let dataTask: URLSessionDataTask = session.dataTask(with: request as URLRequest) { (data, response, error) in
+            
+            print(data!)
+            print(response!)
             
             let jiDoc = Ji(htmlData: data!)!
             let endPriceNodes = jiDoc.xPath("//div[@id='main3']/div[@class='mbx bd3']/div[@class='tab']/table/tr/td[5]")
@@ -55,6 +57,7 @@ class StockPriceGetter{
     
     
     func getPriceNow() -> [String:String] {
+        let stockUrl = URL(string: "https://tw.stock.yahoo.com/q/q?s=\(stockNum)")!
         var reDic:[String:String]!
         var resultArray:[String] = []
         
