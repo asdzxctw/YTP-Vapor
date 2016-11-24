@@ -24,10 +24,12 @@ drop.get("imageIndex") { request in
 }
 
 drop.post("upload") { request in
+    
     if let numStr = request.data["key"]?.string {
         if let num = Int(numStr) {
             if num>1000&&num<10000{
                 let pGetter = StockPriceGetter(number:Int(numStr)!)
+                
                 
                 return try JSON(node: pGetter.getPriceNow())
             }
@@ -38,6 +40,7 @@ drop.post("upload") { request in
 }
 
 drop.post("hisPrice") { request in
+    
     if let numStr = request.data["key"]?.string {
         if let num = Int(numStr) {
             if num>1000&&num<10000{

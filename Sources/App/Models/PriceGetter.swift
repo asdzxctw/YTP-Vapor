@@ -1,7 +1,7 @@
 import Vapor
 import Ji
 import Foundation
-import Dispatch
+//import Dispatch
 
 class StockPriceGetter{
     var stockNum:Int
@@ -14,6 +14,7 @@ class StockPriceGetter{
     
     
     func getHistoryPrice(startDate:String,endDate:String) -> [String:String] {
+        
         let hisStockURL = URL(string: "http://www.cnyes.com/twstock/ps_historyprice/\(stockNum).htm")!
         var reDic:[String:String] = [:]
         let sema = DispatchSemaphore.init(value: 0)
@@ -57,6 +58,7 @@ class StockPriceGetter{
     
     
     func getPriceNow() -> [String:String] {
+        
         let stockUrl = URL(string: "https://tw.stock.yahoo.com/q/q?s=\(stockNum)")!
         var reDic:[String:String]!
         var resultArray:[String] = []
