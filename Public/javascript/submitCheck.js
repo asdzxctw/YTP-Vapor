@@ -26,19 +26,13 @@ function check2()
     if(reg2.key.value == "")
     {
         alert("未輸入股票代碼");
-    }
-    
-    if(reg2.startDate.value == "")
+    }else if(reg2.startDate.value == "")
     {
         alert("未輸入開始日期");
-    }
-    
-    if(reg2.endDate.value == "")
+    }else if(reg2.endDate.value == "")
     {
         alert("未輸入結束日期");
     }
-    
-    
     
     else reg2.submit();
 }

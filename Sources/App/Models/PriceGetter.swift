@@ -61,11 +61,11 @@ class StockPriceGetter{
         let jiDoc = Ji(htmlURL: stockUrl)
         let stockNode = jiDoc?.xPath("/html/body/center/table/tr/td/table/tr[2]/td")
         
-        for element in stockNode!{
-            resultArray.append("\(element.content!)")
-        }
-        
-        if resultArray.count > 5 {
+        if stockNode!.count > 5{
+            for element in stockNode!{
+                resultArray.append("\(element.content!)")
+            }
+            
             resultArray.removeLast()
             reDic = [
                 "股票代號":"\(self.stockNum)",
@@ -81,8 +81,9 @@ class StockPriceGetter{
                 "最低":resultArray[10],
                 
             ]
-            
             return reDic
+            
+            
         }else{
             return ["訊息":"找不到股票呢QQ"]
         }
