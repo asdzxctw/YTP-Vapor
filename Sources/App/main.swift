@@ -19,6 +19,11 @@ drop.get("html") { request in
     return try drop.view.make("index.html")
 }
 
+drop.get("test") { request in
+    
+    return "test個毛啊"
+}
+
 drop.get("imageIndex") { request in
     return try drop.view.make("imageView.html")
 }

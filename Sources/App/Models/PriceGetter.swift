@@ -1,7 +1,7 @@
 import Vapor
-import Ji
+import HTTP
 import Foundation
-//import Dispatch
+import Ji
 
 class StockPriceGetter{
     var stockNum:Int
@@ -12,27 +12,23 @@ class StockPriceGetter{
         
     }
     
-    
     func getHistoryPrice(startDate:String,endDate:String) -> [String:String] {
         
-        let hisStockURL = URL(string: "http://www.cnyes.com/twstock/ps_historyprice/\(stockNum).htm")!
+        let hisStockURL = "http://www.cnyes.com/twstock/ps_historyprice/\(stockNum).htm"
         var reDic:[String:String] = [:]
-        let sema = DispatchSemaphore.init(value: 0)
         print(startDate)
         print(endDate)
         
-        let session = URLSession(configuration: .default)
-        var request: URLRequest = URLRequest(url: hisStockURL)
-        request.httpMethod = "POST"
-        request.httpBody = "ctl00$ContentPlaceHolder1$startText=\(startDate)&ctl00$ContentPlaceHolder1$endText=\(endDate)".data(using: String.Encoding.utf8)
-        
-        
-        let dataTask: URLSessionDataTask = session.dataTask(with: request as URLRequest) { (data, response, error) in
+        let drop = Droplet()
+        do{
             
-            print(data!)
-            print(response!)
+            let respond = try drop.client.request(.other(method:"Post"),
+            hisStockURL,headers: ["Content-Type": "application/x-www-form-urlencoded"],query:[:],
+body:"ctl00$ContentPlaceHolder1$startText=2015/10/20&ctl00$ContentPlaceHolder1$endText=2016/11/11" )
             
-            let jiDoc = Ji(htmlData: data!)!
+            
+            let result = try String(bytes: respond.body.bytes!)
+            let jiDoc = Ji(htmlString: result)!
             let endPriceNodes = jiDoc.xPath("//div[@id='main3']/div[@class='mbx bd3']/div[@class='tab']/table/tr/td[5]")
             let timeNodes = jiDoc.xPath("//div[@id='main3']/div[@class='mbx bd3']/div[@class='tab']/table/tr/td[1]")
             
@@ -40,21 +36,22 @@ class StockPriceGetter{
                 for index in 0...endPriceNodes!.count-1{
                     reDic["\(timeNodes![index].content!)"] = "\(endPriceNodes![index].content!)"
                 }
-                //reDic = ["Yo":"Hoho"]
-                sema.signal()
+                
             }else{
                 reDic = ["訊息":"出錯了呢"]
-                sema.signal()
             }
             
-            
+        }catch{
+            print("getDataError")
+            reDic = ["訊息":"出錯了呢"]
         }
-        dataTask.resume()
-        sema.wait()
         
         return reDic
         
     }
+    
+    
+    
     
     
     func getPriceNow() -> [String:String] {
@@ -93,8 +90,50 @@ class StockPriceGetter{
             return ["訊息":"找不到股票呢QQ"]
         }
         
-        
-        
     }
+    
+//////////Func getHistoryPrice(By URLSession)
+//    func getHistoryPrice(startDate:String,endDate:String) -> [String:String] {
+//        
+//        let hisStockURL = URL(string: "http://www.cnyes.com/twstock/ps_historyprice/\(stockNum).htm")!
+//        var reDic:[String:String] = [:]
+//        let sema = DispatchSemaphore.init(value: 0)
+//        print(startDate)
+//        print(endDate)
+//        
+//        let session = URLSession(configuration: .default)
+//        var request: URLRequest = URLRequest(url: hisStockURL)
+//        request.httpMethod = "POST"
+//        request.httpBody = "ctl00$ContentPlaceHolder1$startText=\(startDate)&ctl00$ContentPlaceHolder1$endText=\(endDate)".data(using: String.Encoding.utf8)
+//        
+//        
+//        let dataTask: URLSessionDataTask = session.dataTask(with: request as URLRequest) { (data, response, error) in
+//            
+//            print(data!)
+//            print(response!)
+//            
+//            let jiDoc = Ji(htmlData: data!)!
+//            let endPriceNodes = jiDoc.xPath("//div[@id='main3']/div[@class='mbx bd3']/div[@class='tab']/table/tr/td[5]")
+//            let timeNodes = jiDoc.xPath("//div[@id='main3']/div[@class='mbx bd3']/div[@class='tab']/table/tr/td[1]")
+//            
+//            if endPriceNodes!.count > 0{
+//                for index in 0...endPriceNodes!.count-1{
+//                    reDic["\(timeNodes![index].content!)"] = "\(endPriceNodes![index].content!)"
+//                }
+//                //reDic = ["Yo":"Hoho"]
+//                sema.signal()
+//            }else{
+//                reDic = ["訊息":"出錯了呢"]
+//                sema.signal()
+//            }
+//            
+//            
+//        }
+//        dataTask.resume()
+//        sema.wait()
+//        
+//        return reDic
+//        
+//    }
     
 }
