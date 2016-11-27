@@ -67,7 +67,7 @@ class StockPriceGetter{
             //print(data)
             
             
-            let jiDoc = Ji(htmlString: data, encoding: String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.big5_HKSCS_1999.rawValue))))!
+            let jiDoc = Ji(htmlString: data, encoding: String.Encoding.unicode)!
             let stockNode = jiDoc.xPath("/html/body/center/table/tr/td/table/tr[2]/td")
             
             if stockNode!.count > 5{
