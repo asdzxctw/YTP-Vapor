@@ -19,10 +19,10 @@ class StockPriceGetter{
         print(startDate)
         print(endDate)
         
-        let drop = Droplet()
+        let dropp = Droplet()
         do{
             
-            let respond = try drop.client.request(.other(method:"Post"),
+            let respond = try dropp.client.request(.other(method:"Post"),
             hisStockURL,headers: ["Content-Type": "application/x-www-form-urlencoded"],query:[:],
                 body:"ctl00$ContentPlaceHolder1$startText=\(startDate)&ctl00$ContentPlaceHolder1$endText=\(endDate)")
             
