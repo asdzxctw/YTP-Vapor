@@ -67,7 +67,7 @@ class StockPriceGetter{
             //print(data)
             
             
-            let jiDoc = Ji(htmlString: data, encoding: String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.big5.rawValue))))!
+            let jiDoc = Ji(htmlString: data, encoding: String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.big5_HKSCS_1999.rawValue))))!
             let stockNode = jiDoc.xPath("/html/body/center/table/tr/td/table/tr[2]/td")
             
             if stockNode!.count > 5{
@@ -76,7 +76,7 @@ class StockPriceGetter{
                 }
                 
                 resultArray.removeLast()
-                print(resultArray)
+                //print(resultArray)
                 reDic = [
                     "股票代號":"\(self.stockNum)",
                     "時間":resultArray[1],
