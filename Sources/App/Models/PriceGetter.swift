@@ -22,7 +22,7 @@ class StockPriceGetter{
         let drop = Droplet()
         do{
             
-            let respond = try drop.client.request(.other(method:"GET"),
+            let respond = try drop.client.request(.other(method:"Post"),
             hisStockURL,headers: ["Content-Type": "application/x-www-form-urlencoded"],query:[:],
                 body:"ctl00$ContentPlaceHolder1$startText=\(startDate)&ctl00$ContentPlaceHolder1$endText=\(endDate)")
             
