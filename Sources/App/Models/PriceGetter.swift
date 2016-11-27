@@ -56,6 +56,8 @@ class StockPriceGetter{
     
     func getPriceNow() -> [String:String] {
         
+        print("getPriceNow")
+        
         let stockUrl = "https://tw.stock.yahoo.com/q/q?s=\(stockNum)"
         var reDic:[String:String]!
         var resultArray:[String] = []
@@ -63,7 +65,6 @@ class StockPriceGetter{
         do{
             
             let data = try String(contentsOf: URL(string:stockUrl)!)
-            //print(data)
             
             
             let jiDoc = Ji(htmlString: data, encoding: String.Encoding.unicode)!
@@ -75,7 +76,6 @@ class StockPriceGetter{
                 }
                 
                 resultArray.removeLast()
-                //print(resultArray)
                 reDic = [
                     "股票代號":"\(self.stockNum)",
                     "時間":resultArray[1],

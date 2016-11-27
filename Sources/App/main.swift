@@ -5,11 +5,11 @@ import HTTP
 
 
 let drop = Droplet()
-//let pGetter = StockPriceGetter(number:6116)
 
 
 
 drop.get { _ in
+    print("/")
     return try JSON(node: [
         "現在時間":"上午貳拾壹點參捌點整"
         ])
@@ -20,7 +20,6 @@ drop.get("html") { request in
 }
 
 drop.get("test") { request in
-    
     return "test個毛啊"
 }
 
