@@ -1,7 +1,6 @@
 import Vapor
 import HTTP
 import Foundation
-import CoreFoundation
 import Ji
 
 class StockPriceGetter{
