@@ -22,9 +22,9 @@ class StockPriceGetter{
         let drop = Droplet()
         do{
             
-            let respond = try drop.client.request(.other(method:"Post"),
+            let respond = try drop.client.request(.other(method:"GET"),
             hisStockURL,headers: ["Content-Type": "application/x-www-form-urlencoded"],query:[:],
-body:"ctl00$ContentPlaceHolder1$startText=2015/10/20&ctl00$ContentPlaceHolder1$endText=2016/11/11" )
+                body:"ctl00$ContentPlaceHolder1$startText=\(startDate)&ctl00$ContentPlaceHolder1$endText=\(endDate)")
             
             
             let result = try String(bytes: respond.body.bytes!)
@@ -43,7 +43,7 @@ body:"ctl00$ContentPlaceHolder1$startText=2015/10/20&ctl00$ContentPlaceHolder1$e
             
         }catch{
             print("getDataError")
-            reDic = ["訊息":"出錯了呢"]
+            reDic = ["訊息":"資料取得失敗"]
         }
         
         return reDic
@@ -56,39 +56,49 @@ body:"ctl00$ContentPlaceHolder1$startText=2015/10/20&ctl00$ContentPlaceHolder1$e
     
     func getPriceNow() -> [String:String] {
         
-        let stockUrl = URL(string: "https://tw.stock.yahoo.com/q/q?s=\(stockNum)")!
+        let stockUrl = "https://tw.stock.yahoo.com/q/q?s=\(stockNum)"
         var reDic:[String:String]!
         var resultArray:[String] = []
         
-        let jiDoc = Ji(htmlURL: stockUrl)
-        let stockNode = jiDoc?.xPath("/html/body/center/table/tr/td/table/tr[2]/td")
-        
-        if stockNode!.count > 5{
-            for element in stockNode!{
-                resultArray.append("\(element.content!)")
+        do{
+            
+            let data = try String(contentsOf: URL(string:stockUrl)!)
+            //print(data)
+            
+            
+            let jiDoc = Ji(htmlString: data, encoding: String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.big5.rawValue))))!
+            let stockNode = jiDoc.xPath("/html/body/center/table/tr/td/table/tr[2]/td")
+            
+            if stockNode!.count > 5{
+                for element in stockNode!{
+                    resultArray.append("\(element.content!)")
+                }
+                
+                resultArray.removeLast()
+                print(resultArray)
+                reDic = [
+                    "股票代號":"\(self.stockNum)",
+                    "時間":resultArray[1],
+                    "成交":resultArray[2],
+                    "買進":resultArray[3],
+                    "賣出":resultArray[4],
+                    "漲跌":"\(Double(resultArray[2])!-Double(resultArray[7])!)",
+                    "張數":resultArray[6],
+                    "昨收":resultArray[7],
+                    "開盤":resultArray[8],
+                    "最高":resultArray[9],
+                    "最低":resultArray[10],
+                ]
+            }else{
+                return ["訊息":"找不到股票呢QQ"]
             }
             
-            resultArray.removeLast()
-            reDic = [
-                "股票代號":"\(self.stockNum)",
-                "時間":resultArray[1],
-                "成交":resultArray[2],
-                "買進":resultArray[3],
-                "賣出":resultArray[4],
-                "漲跌":"\(Double(resultArray[2])!-Double(resultArray[7])!)",
-                "張數":resultArray[6],
-                "昨收":resultArray[7],
-                "開盤":resultArray[8],
-                "最高":resultArray[9],
-                "最低":resultArray[10],
-                
-            ]
-            return reDic
-            
-            
-        }else{
-            return ["訊息":"找不到股票呢QQ"]
+        }catch{
+            print("getDataError")
+            reDic = ["訊息":"資料取得失敗"]
         }
+        
+        return reDic
         
     }
     
